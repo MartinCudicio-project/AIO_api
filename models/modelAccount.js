@@ -1,38 +1,33 @@
+
+//pour pouvoir mettre des objets dans des objets il faudra créer des sub-document
+//https://mongoosejs.com/docs/subdocs.html - liens qui expliquent le principe
+//la video est bien faite 0min à 20min il fait en mode projet simple
+//apres il explique à quoi correspond les folder './models' et './routes' important de comprendre
+
 const mongoose = require('mongoose');
-const PostSchema = mongoose.Schema({
+
+const ContractSchema = mongoose.Schema({
+    contract_id : String,
+    object : String,
+    month_price : Number,
+    date_enroll : {
+        type : Date,
+        default : Date.now
+    },
+    listWarranted :[{
+        title : String,
+        description : String,
+        rate : Number
+    }]
+});
+
+const AccountSchema = mongoose.Schema({
     folder_id : {
         //un numero de compte qui est obligatoire
         type : String,
         require : true
     },
-    listContrat : [{
-        contract_id : String,
-        object : String,
-        month_price : Number,
-        date_enroll : {
-            type : Date,
-            default : Date.now
-        },
-        listWarranted :[{
-            title : String,
-            description : String,
-            rate : Number,
-        }]
-    }],
-    contract : {
-        contract_id : String,
-        object : String,
-        month_price : Number,
-        date_enroll : {
-            type : Date,
-            default : Date.now
-        },
-        listWarranted :[{
-            title : String,
-            description : String,
-            rate : Number
-        }]
-    }
+    listContract : [ContractSchema]
 });
 
-module.exports = mongoose.model('account',PostSchema);
+module.exports = mongoose.model('account',AccountSchema);

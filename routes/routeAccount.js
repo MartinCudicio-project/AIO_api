@@ -1,14 +1,14 @@
 const express = require('express');
 
 const router = express.Router();
-const Post = require('../models/modelAccount');
+const AccountModel = require('../models/modelAccount');
 const uuidv4 = require('uuid/v4');
 //ROUTES
 
 //get back all the account
 router.get('/',async(req,res)=>{
     try{
-        const posts = await Post.find();
+        const posts = await AccountModel.find();
         res.json(posts);
     }catch(err){
         res.json({message:err});
@@ -18,7 +18,7 @@ router.get('/',async(req,res)=>{
 //get back contract with folder id 
 router.get('/:folderId', async(req,res)=>{
     try{
-        const post = await Post.find({
+        const post = await AccountModel.find({
             folder_id : req.params.folderId,
         });
         res.json(post);
@@ -32,10 +32,8 @@ router.get('/:folderId', async(req,res)=>{
 //on créera d'autre methode pour ajouter un contrat etc..
 router.post('/:folderId',async (req,res)=>{
     console.log(req.params.folderId);
-    const post = new Post({
-        folder_id : req.params.folderId,
-        listContrat : [],
-        contract : []
+    const post = new AccountModel({
+        folder_id : req.params.folderId
     });
     try{   
         const savedPost = await post.save();
@@ -53,8 +51,14 @@ router.post('/:folderId',async (req,res)=>{
 
 router.post('/contract/:folderId',async (req,res)=>{
     try{
-        const updatedPost = await Post.updateOne({folder_id : req.params.folderId},{
-            $set : { contract : req.body.contract}
+        console.log(req.body)
+        const updatedPost = await AccountModel.updateOne({folder_id : req.params.folderId},{
+            //pour le $pull, $push j'ai trouvé sur la doc officielle
+            //https://docs.mongodb.com/manual/reference/operator/update-array/
+            $push : { listContract : {
+                contract_id : req.body.contract_id,
+                object : req.body.object
+            }}
         });
         res.json(updatedPost);
     }catch(err){
@@ -62,17 +66,49 @@ router.post('/contract/:folderId',async (req,res)=>{
     }
 });
 
-router.delete('/contract/:folderId/:contractId',async (req,res)=>{
+//delete an entire account with its folder_id
+router.delete('/:folderId',async (req,res)=>{
     try{
-        const rmContract = await Post.remove(
-        {contract : {contract_id : req.params.contractId}
-        });
+        const rmContract = await AccountModel.remove(
+        {folder_id : req.params.folderId}
+        );
         res.json(rmContract);
     }catch(err){
         res.json(err);
     }
 });
 
+//delete all contracts from an account identified by folder_id
+router.delete('/contract/:folderId',async (req,res)=>{
+    try{
+        const rmContract = await AccountModel.updateOne(
+        {folder_id : req.params.folderId},
+        //https://docs.mongodb.com/manual/reference/operator/update/pull/
+        {$pull : {listContract : {} } 
+        //aucun critere pour le filtre
+        //on supprimme tous les contrats
+    });
+        res.json(rmContract);
+    }catch(err){
+        res.json(err);
+    }
+});
 
+//delete just a contract identified by contract_id from an account identified by folder_id
+router.delete('/contract/:folderId/:contractId',async (req,res)=>{
+    try{
+        console.log(req.params.contractId);
+        const rmContract = await AccountModel.updateOne(
+        {folder_id : req.params.folderId},
+        //https://docs.mongodb.com/manual/reference/operator/update/pull/
+        {$pull : {listContract : {contract_id : req.params.contractId} } 
+        //le filtre est le contractId, tout le reste ne sera pas supp
+        //pour faire le contraire utilise $in
+    });
+        res.json(rmContract);
+    }catch(err){
+        res.json(err);
+    }
+});
 
 module.exports =router;

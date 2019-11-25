@@ -4,7 +4,8 @@ const router = express.Router();
 const Post = require('../models/modelUser');
 const uuidv4 = require('uuid/v4');
 //ROUTES
-
+//explication 
+//https://www.youtube.com/watch?v=vjf774RKrLc 20ieme minutes
 //get back all the posts
 router.get('/',async(req,res)=>{
     try{
