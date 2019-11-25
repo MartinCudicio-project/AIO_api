@@ -1,8 +1,8 @@
 const express = require('express');
 
 const router = express.Router();
-const Post = require('../models/modelsListUser');
-
+const Post = require('../models/modelUser');
+const uuidv4 = require('uuid/v4');
 //ROUTES
 
 //get back all the posts
@@ -23,7 +23,8 @@ router.post('/',async (req,res)=>{
         first_name: req.body.first_name,
         last_name: req.body.last_name,
         email : req.body.email,
-        password: req.body.password
+        password: req.body.password,
+        folder : uuidv4()
     });
     try{   
         const savedPost = await post.save();

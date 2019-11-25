@@ -19,8 +19,11 @@ app.use(cors({
 app.use(bodyParser.json())
 
 
-const userRoute = require('./routes/routesListUser');
-app.use('/user',userRoute);
+const userRoute = require('./routes/routeUser');
+const accountRoute = require('./routes/routeAccount');
+
+app.use('/users',userRoute);
+app.use('/account',accountRoute);
 
 //connect to db
 connectDB();

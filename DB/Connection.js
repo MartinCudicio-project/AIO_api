@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 require('dotenv/config');
 
-const URI = process.env.DB_CONNECTION;
+const URI = "mongodb+srv://mart:mart@aiocluster-m0vw5.mongodb.net/aio?retryWrites=true&w=majority";
 const connectDB = async()=>{
     await mongoose.connect(URI,{
         useUnifiedTopology: true,

@@ -18,8 +18,9 @@ const PostSchema = mongoose.Schema({
     },
     folder :{
         //le numero de son dossier d'assurance
-        type: Number,
-        require: false
+        //on utilise la bibli uuid pour generer un numero de dossier unique
+        //servira dans une autre collection comme clé primaire pour recuperer les dossiers etc..
+        type: String
     },
     photo :{
         type: String,
