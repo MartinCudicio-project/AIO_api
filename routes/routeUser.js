@@ -6,7 +6,8 @@ const uuidv4 = require('uuid/v4');
 //ROUTES
 //explication 
 //https://www.youtube.com/watch?v=vjf774RKrLc 20ieme minutes
-//get back all the posts
+
+//get back all the users
 router.get('/',async(req,res)=>{
     try{
         const posts = await Post.find();
@@ -16,7 +17,18 @@ router.get('/',async(req,res)=>{
     }
 });
 
-//get back user_id if he exists (email,pwd)
+//get back if is a user is unique with the email
+router.get('/:postEmail', async(req,res)=>{
+    try{
+        const post = await Post.find({
+            email : req.params.postEmail
+        }).count();
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
 //submit a post
 router.post('/',async (req,res)=>{
     console.log(req.body);
@@ -35,14 +47,25 @@ router.post('/',async (req,res)=>{
     }
 });
 
-//specific get with id
+//get back user_id if he exists (email,pwd)
 router.get('/:postEmail/:postPwd', async(req,res)=>{
     console.log(req.params.postEmail);
     try{
-        const post = await Post.find({
+        const post = await Post.findOne({
             email : req.params.postEmail,
             password : req.params.postPwd
-        }).count();
+        });
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
+router.delete('/:postEmail', async(req,res)=>{
+    try{
+        const post = await Post.remove({
+            email : req.params.postEmail
+        });
         res.json(post);
     }catch(err){
         res.json(err);

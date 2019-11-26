@@ -18,7 +18,7 @@ router.get('/',async(req,res)=>{
 //get back contract with folder id 
 router.get('/:folderId', async(req,res)=>{
     try{
-        const post = await AccountModel.find({
+        const post = await AccountModel.findOne({
             folder_id : req.params.folderId,
         });
         res.json(post);
@@ -48,7 +48,6 @@ router.post('/:folderId',async (req,res)=>{
 //on utilise un params pour identifier le contrat à modifier
 //les informations à modifier sur le contrat seront communiquer 
 //par body : JSON
-
 router.post('/contract/:folderId',async (req,res)=>{
     try{
         console.log(req.body)
