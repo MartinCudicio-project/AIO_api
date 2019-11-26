@@ -48,12 +48,11 @@ router.post('/',async (req,res)=>{
 });
 
 //get back user_id if he exists (email,pwd)
-router.get('/:postEmail/:postPwd', async(req,res)=>{
-    console.log(req.params.postEmail);
+router.get('/', async(req,res)=>{
     try{
         const post = await Post.findOne({
-            email : req.params.postEmail,
-            password : req.params.postPwd
+            email : req.body.email,
+            password : req.body.password
         });
         res.json(post);
     }catch(err){
