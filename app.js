@@ -2,6 +2,7 @@ const express = require('express');
 const connectDB = require('./DB/Connection')
 const app = express();
 const bodyParser=require('body-parser');
+const port = process.env.PORT;
 
 //lien de la vidéo qui m'a permi de comprendre et faire le projet
 //https://www.youtube.com/watch?v=vjf774RKrLc
@@ -30,6 +31,6 @@ app.use('/account',accountRoute);
 
 //connect to db
 connectDB();
-const Port = process.env.Port || 3000;
 
-app.listen(Port,()=>console.log("server started"));
+
+app.listen(port,()=>console.log("server started"));
