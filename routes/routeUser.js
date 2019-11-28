@@ -1,8 +1,10 @@
 const express = require('express');
 
 const router = express.Router();
-const Post = require('../models/modelUser');
+const User = require('../models/modelUser');
 const uuidv4 = require('uuid/v4');
+const auth = require('../middleware/auth');
+
 //ROUTES
 //explication 
 //https://www.youtube.com/watch?v=vjf774RKrLc 20ieme minutes
@@ -17,9 +19,9 @@ HTTP post /users/logoutall - Déconnexion de tous les appareils.
 */
 
 //get back all the users
-router.get('/',async(req,res)=>{
+router.get('/all',async(req,res)=>{
     try{
-        const posts = await Post.find();
+        const posts = await User.find();
         res.json(posts);
     }catch(err){
         res.json({message:err});
@@ -27,9 +29,9 @@ router.get('/',async(req,res)=>{
 });
 
 //get back if is a user is unique with the email
-router.get('/:postEmail', async(req,res)=>{
+router.get('/check/:postEmail', async(req,res)=>{
     try{
-        const post = await Post.find({
+        const post = await User.find({
             email : req.params.postEmail
         }).count();
         res.json(post);
@@ -37,6 +39,7 @@ router.get('/:postEmail', async(req,res)=>{
         res.json(err);
     }
 });
+
 
 //créer un utilisateur avec req.body (JSON)
 router.post('/', async (req, res) => {
@@ -50,10 +53,10 @@ router.post('/', async (req, res) => {
             folder : uuidv4()
         })
         await user.save()
-        const token = await user.generateAuthToken()
-        res.status(201).send({ user, token })
+        const token = await user.generateAuthToken();
+        res.status(201).send({ user, token });
     } catch (error) {
-        res.status(400).send(error)
+        res.status(400).json(error);
     }
 });
 
@@ -62,36 +65,57 @@ router.post('/login', async(req, res) => {
     //Login a registered user
     try {
         const { email, password } = req.body
-        const user = await User.findByCredentials(email, password)
-        if (!user) {
+        const userTemp = await User.findByCredentials(email, password)
+        if (!userTemp) {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
-        const token = await user.generateAuthToken()
-        res.send({ user, token })
-    } catch (error) {
-        res.status(400).send(error)
+        const token = await userTemp.generateAuthToken();
+        res.send({ userTemp, token });
+    } 
+    catch (error) {
+        res.status(404).send(error)
     }
-
 })
-/*
-router.post('/',async (req,res)=>{
-    console.log(req.body);
-    const post = new Post({
-        
-    });
-    try{   
-        const savedPost = await post.save();
-        res.json(savedPost);
-    }catch(err){
-        res.json({message:err});
+
+//cette methode va permettr d'obtenir le profil de l'utilisateur
+//on auth passé en parametres qui se situe dans ../middleware/auth.js
+router.get('/me', auth, async(req, res) => {
+    // View logged in user profile
+    res.send(req.user)
+})
+
+
+//section 10 
+//lien - https://medium.com/swlh/jwt-authentication-authorization-in-nodejs-express-mongodb-rest-apis-2019-ad14ec818122
+router.post('/me/logout', auth, async (req, res) => {
+    // Log user out of the application
+    try {
+        req.user.tokens = req.user.tokens.filter((token) => {
+            return token.token != req.token
+        })
+        await req.user.save()
+        res.send()
+    } catch (error) {
+        res.status(500).send(error)
     }
-});
-*/
+})
+
+router.post('/me/logoutall', auth, async(req, res) => {
+    // Log user out of all devices
+    try {
+        req.user.tokens.splice(0, req.user.tokens.length)
+        await req.user.save()
+        res.send()
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
 
 //get back user_id if he exists (email,pwd)
 router.get('/', async(req,res)=>{
     try{
-        const post = await Post.findOne({
+        const post = await User.findOne({
             email : req.body.email,
             password : req.body.password
         });
@@ -106,7 +130,7 @@ router.get('/', async(req,res)=>{
 
 router.delete('/:postEmail', async(req,res)=>{
     try{
-        const post = await Post.remove({
+        const post = await User.remove({
             email : req.params.postEmail
         });
         res.json(post);

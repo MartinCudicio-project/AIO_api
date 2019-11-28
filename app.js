@@ -33,4 +33,4 @@ app.use('/account',accountRoute);
 connectDB();
 
 
-app.listen(port,()=>console.log("server started"));
+app.listen(port,()=>console.log("server started sur le port "+ port));
