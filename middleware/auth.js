@@ -1,5 +1,6 @@
-const jwt = require('jsonwebtoken')
-const User = require('../models/modelUser')
+const jwt = require('jsonwebtoken');
+const User = require('../models/modelUser');
+const JWT_KEY = "WinterIsComing2019";
 
 //ce middleware explication à
 //https://medium.com/swlh/jwt-authentication-authorization-in-nodejs-express-mongodb-rest-apis-2019-ad14ec818122
