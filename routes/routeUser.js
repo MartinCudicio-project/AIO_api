@@ -43,13 +43,11 @@ router.get('/checkEmail/:postEmail', async(req,res)=>{
 //get back the token in req.body exists in the list Token of user
 router.get('/checkToken/', async(req,res)=>{
     try{
-        console.log(req)
+        console.log(req.body)
         const post = await User.find({
-            email : req.body.email,
-            tokens : {
-                token : req.body.token
-            }
+            email : req.body.email
         }).count();
+        console.log(post)
         res.json(post);
     }catch(err){
         res.json(err);
@@ -62,6 +60,7 @@ router.get('/checkToken/', async(req,res)=>{
 //créer un utilisateur avec req.body (JSON)
 router.post('/', async (req, res) => {
     // Create a new user
+    console.log(req.body)
     try {
         const user = new User({
             first_name: req.body.first_name,
