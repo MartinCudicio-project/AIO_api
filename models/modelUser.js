@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 // creation de token generation etc, lien qui explique au dessus
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-
+const JWT_KEY = "WinterIsComing2019"
 
 const PostSchema = mongoose.Schema({
     first_name : {
@@ -46,18 +46,15 @@ PostSchema.pre('save',async function(next){
     //on hash le mdp avant d'enregistrer dans le model
     const user = this;
     if(user.isModified('password')){
-        user.password  = await bcrypt.hash(user.password,8)
-        console.log(user.password);
-        
+        user.password  = await bcrypt.hash(user.password,8)        
     };
     next()
 });
 
 PostSchema.methods.generateAuthToken = async function() {
     // Generate an auth token for the user
-    console.log("test")
     const user = this
-    const token = jwt.sign({_id: user._id}, process.env.JWT_KEY)
+    const token = jwt.sign({_id: user._id}, JWT_KEY)
     user.tokens = user.tokens.concat({token})
     await user.save()
     return token

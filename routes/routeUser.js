@@ -29,7 +29,7 @@ router.get('/all',async(req,res)=>{
 });
 
 //get back if is a user is unique with the email
-router.get('/check/:postEmail', async(req,res)=>{
+router.get('/checkEmail/:postEmail', async(req,res)=>{
     try{
         const post = await User.find({
             email : req.params.postEmail
@@ -39,6 +39,24 @@ router.get('/check/:postEmail', async(req,res)=>{
         res.json(err);
     }
 });
+
+//get back the token in req.body exists in the list Token of user
+router.get('/checkToken/', async(req,res)=>{
+    try{
+        console.log(req)
+        const post = await User.find({
+            email : req.body.email,
+            tokens : {
+                token : req.body.token
+            }
+        }).count();
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
+
 
 
 //créer un utilisateur avec req.body (JSON)
@@ -53,7 +71,7 @@ router.post('/', async (req, res) => {
             folder : uuidv4()
         })
         await user.save()
-        const token = await user.generateAuthToken();
+        //const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
     } catch (error) {
         res.status(400).json(error);
@@ -70,6 +88,7 @@ router.post('/login', async(req, res) => {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
         const token = await userTemp.generateAuthToken();
+        console.log(token)
         res.send({ userTemp, token });
     } 
     catch (error) {
