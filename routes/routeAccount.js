@@ -65,11 +65,14 @@ router.post('/contract/:folderId',async (req,res)=>{
     }
 });
 
+
+
 //delete an entire account with its folder_id
-router.delete('/:folderId',async (req,res)=>{
+router.delete('/:folderPost',async (req,res)=>{
     try{
+        console.log(req.body)
         const rmContract = await AccountModel.remove(
-        {folder_id : req.params.folderId}
+        {folder_id : req.params.folderPost}
         );
         res.json(rmContract);
     }catch(err){

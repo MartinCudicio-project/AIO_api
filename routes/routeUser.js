@@ -2,7 +2,6 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('../models/modelUser');
-const uuidv4 = require('uuid/v4');
 const auth = require('../middleware/auth');
 
 //ROUTES
@@ -41,13 +40,12 @@ router.get('/checkEmail/:postEmail', async(req,res)=>{
 });
 
 //get back the token in req.body exists in the list Token of user
-router.get('/checkToken/', async(req,res)=>{
+router.post('/checkToken/', async(req,res)=>{
     try{
         console.log(req.body)
-        const post = await User.find({
-            email : req.body.email
-        }).count();
-        console.log(post)
+        const post = await User.findOne(
+            {tokens: {$elemMatch: {token:req.body.token}}
+        }).count()
         res.json(post);
     }catch(err){
         res.json(err);
@@ -67,7 +65,7 @@ router.post('/', async (req, res) => {
             last_name: req.body.last_name,
             email : req.body.email,
             password: req.body.password,
-            folder : uuidv4()
+            folder : req.body.folder
         })
         await user.save()
         //const token = await user.generateAuthToken();
@@ -87,7 +85,6 @@ router.post('/login', async(req, res) => {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
         const token = await userTemp.generateAuthToken();
-        console.log(token)
         res.send({ userTemp, token });
     } 
     catch (error) {
@@ -146,10 +143,10 @@ router.get('/', async(req,res)=>{
     }
 });
 
-router.delete('/:postEmail', async(req,res)=>{
+router.delete('/:folderPost', async(req,res)=>{
     try{
         const post = await User.remove({
-            email : req.params.postEmail
+            folder : req.params.folderPost
         });
         res.json(post);
     }catch(err){

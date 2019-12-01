@@ -12,7 +12,7 @@ const bodyParser=require('body-parser');
 const port = 3000;
 var cors = require('cors');
 app.use(cors({
-  'allowedHeaders': ['sessionId', 'Content-Type'],
+  'allowedHeaders': ['sessionId', 'Content-Type','Authorization'],
   'exposedHeaders': ['sessionId'],
   'origin': '*',
   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
