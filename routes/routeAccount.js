@@ -6,7 +6,7 @@ const uuidv4 = require('uuid/v4');
 //ROUTES
 
 //get back all the account
-router.get('/',async(req,res)=>{
+router.get('/all',async(req,res)=>{
     try{
         const posts = await AccountModel.find();
         res.json(posts);
@@ -15,7 +15,7 @@ router.get('/',async(req,res)=>{
     }
 });
 
-//get back contract with folder id 
+//get back account with folder id 
 router.get('/:folderId', async(req,res)=>{
     try{
         const post = await AccountModel.findOne({
@@ -28,12 +28,10 @@ router.get('/:folderId', async(req,res)=>{
 });
 
 //on initialise le compte d'un user avec son folder_id unique
-//permet juste de faire l'initialisation
-//on créera d'autre methode pour ajouter un contrat etc..
-router.post('/:folderId',async (req,res)=>{
-    console.log(req.params.folderId);
+//permet juste de faire l'initialisation de l'account avec le folder_id et une liste de contrats vide
+router.post('/',async (req,res)=>{
     const post = new AccountModel({
-        folder_id : req.params.folderId
+        folder_id : req.body.folder
     });
     try{   
         const savedPost = await post.save();
@@ -44,19 +42,23 @@ router.post('/:folderId',async (req,res)=>{
 });
 
 //patch permet de modifer partielement sans ecraser l'objet
-//1) patch pour créer un contrat
+//1) post pour créer un contrat
 //on utilise un params pour identifier le contrat à modifier
-//les informations à modifier sur le contrat seront communiquer 
-//par body : JSON
-router.post('/contract/:folderId',async (req,res)=>{
+//les informations à modifier sur le contrat seront communiquées
+//par req.body : JSON
+router.post('/contract/create',async (req,res)=>{
     try{
         console.log(req.body)
-        const updatedPost = await AccountModel.updateOne({folder_id : req.params.folderId},{
+        const updatedPost = await AccountModel.updateOne({folder_id : req.body.folder_id},{
             //pour le $pull, $push j'ai trouvé sur la doc officielle
             //https://docs.mongodb.com/manual/reference/operator/update-array/
             $push : { listContract : {
-                contract_id : req.body.contract_id,
-                object : req.body.object
+                contract_id : uuidv4(),
+                object : req.body.object,
+                brand : req.body.brand,
+                model : req.body.model,
+                purchasePrice : req.body.purchasePrice,
+                month_price : req.body.month_price
             }}
         });
         res.json(updatedPost);
@@ -70,7 +72,6 @@ router.post('/contract/:folderId',async (req,res)=>{
 //delete an entire account with its folder_id
 router.delete('/:folderPost',async (req,res)=>{
     try{
-        console.log(req.body)
         const rmContract = await AccountModel.remove(
         {folder_id : req.params.folderPost}
         );
@@ -81,10 +82,10 @@ router.delete('/:folderPost',async (req,res)=>{
 });
 
 //delete all contracts from an account identified by folder_id
-router.delete('/contract/:folderId',async (req,res)=>{
+router.delete('/contract/all',async (req,res)=>{
     try{
         const rmContract = await AccountModel.updateOne(
-        {folder_id : req.params.folderId},
+        {folder_id : req.body.folder_id},
         //https://docs.mongodb.com/manual/reference/operator/update/pull/
         {$pull : {listContract : {} } 
         //aucun critere pour le filtre
@@ -97,13 +98,14 @@ router.delete('/contract/:folderId',async (req,res)=>{
 });
 
 //delete just a contract identified by contract_id from an account identified by folder_id
-router.delete('/contract/:folderId/:contractId',async (req,res)=>{
+router.post('/contract/delete',async (req,res)=>{
     try{
-        console.log(req.params.contractId);
-        const rmContract = await AccountModel.updateOne(
-        {folder_id : req.params.folderId},
+        console.log("delete")
+        console.log(req.body);
+        const rmContract = await AccountModel.update(
+        {folder_id : req.body.folder_id},
         //https://docs.mongodb.com/manual/reference/operator/update/pull/
-        {$pull : {listContract : {contract_id : req.params.contractId} } 
+        {$pull : {listContract : {contract_id : req.body.contract_id} } 
         //le filtre est le contractId, tout le reste ne sera pas supp
         //pour faire le contraire utilise $in
     });

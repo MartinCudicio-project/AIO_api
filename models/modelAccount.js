@@ -9,8 +9,13 @@ const mongoose = require('mongoose');
 const ContractSchema = mongoose.Schema({
     contract_id : String,
     object : String,
+    brand : String,
+    model : String,
+    purchasePrice : Number,
     month_price : Number,
-    date_enroll : {
+    bill_photo : String,
+    imei : String,
+    purchaseDate : {
         type : Date,
         default : Date.now
     },
