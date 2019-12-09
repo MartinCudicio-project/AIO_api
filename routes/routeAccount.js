@@ -55,6 +55,7 @@ router.post('/contract/create',async (req,res)=>{
             $push : { listContract : {
                 contract_id : uuidv4(),
                 object : req.body.object,
+                serialNumber : req.body.serialNumber,
                 brand : req.body.brand,
                 model : req.body.model,
                 purchasePrice : req.body.purchasePrice,
