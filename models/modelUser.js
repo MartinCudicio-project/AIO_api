@@ -25,6 +25,10 @@ const PostSchema = mongoose.Schema({
     photo :{
         type: String,
         require: false
+    },
+    phone :{
+        type: Int32Array,
+        require: true
     }
 });
 
