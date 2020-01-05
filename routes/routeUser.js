@@ -64,7 +64,8 @@ router.post('/', async (req, res) => {
             last_name: req.body.last_name,
             email : req.body.email,
             password: req.body.password,
-            folder : req.body.folder
+            folder : req.body.folder,
+            phone : req.body.phone
         })
         await user.save()
         //const token = await user.generateAuthToken();
