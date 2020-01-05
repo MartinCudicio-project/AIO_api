@@ -27,7 +27,7 @@ const PostSchema = mongoose.Schema({
         require: false
     },
     phone :{
-        type: Array,
+        type: String,
         require: true
     }
 });
