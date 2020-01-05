@@ -10,6 +10,7 @@ const ContractSchema = mongoose.Schema({
     contract_id : String,
     object : String,
     brand : String,
+    category : String,
     model : String,
     serialNumber : String,
     purchasePrice : Number,
@@ -17,14 +18,14 @@ const ContractSchema = mongoose.Schema({
     bill_photo : String,
     imei : String,
     purchaseDate : {
-        type : Date,
-        default : Date.now
+        type : Date
     },
     listWarranted :[{
         title : String,
         description : String,
         rate : Number
-    }]
+    }],
+    file : String
 });
 
 const AccountSchema = mongoose.Schema({
