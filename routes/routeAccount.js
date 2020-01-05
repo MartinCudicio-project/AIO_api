@@ -62,6 +62,7 @@ router.post('/init',async (req,res)=>{
 //par req.body : JSON
 router.post('/contract/create',async (req,res)=>{
     try{
+        console.log(req.body)
         const updatedPost = await AccountModel.updateOne({folder_id : req.body.folder_id},{
             //pour le $pull, $push j'ai trouvé sur la doc officielle
             //https://docs.mongodb.com/manual/reference/operator/update-array/
