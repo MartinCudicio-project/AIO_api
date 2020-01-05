@@ -42,7 +42,6 @@ router.get('/checkEmail/:postEmail', async(req,res)=>{
 //get back the token in req.body exists in the list Token of user
 router.post('/checkToken/', async(req,res)=>{
     try{
-        console.log(req.body)
         const post = await User.findOne(
             {tokens: {$elemMatch: {token:req.body.token}}
         }).count()

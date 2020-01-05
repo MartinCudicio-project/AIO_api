@@ -19,11 +19,12 @@ const ContractSchema = mongoose.Schema({
         type : Date,
         default : Date.now
     },
-    listWarranted :[{
-        title : String,
-        description : String,
-        rate : Number
-    }]
+    listWarranted :{
+        panne : Boolean,
+        casse : Boolean,
+        vol : Boolean,
+        oxydation : Boolean
+    }
 });
 
 const AccountSchema = mongoose.Schema({

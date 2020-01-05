@@ -15,11 +15,25 @@ router.get('/all',async(req,res)=>{
     }
 });
 
-//get back account with folder id 
-router.get('/:folderId', async(req,res)=>{
+//retourne tous les contrats d'un folder
+//à partir de req.body folder_id:
+router.post('/', async(req,res)=>{
     try{
         const post = await AccountModel.findOne({
-            folder_id : req.params.folderId,
+            folder_id : req.body.folder_id,
+        });
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
+//retourne toutes les assurances d'un contrat
+//avec son contract_id en req body
+router.post('/', async(req,res)=>{
+    try{
+        const post = await AccountModel.findOne({
+            folder_id : req.body.folder_id,
         });
         res.json(post);
     }catch(err){
@@ -29,9 +43,9 @@ router.get('/:folderId', async(req,res)=>{
 
 //on initialise le compte d'un user avec son folder_id unique
 //permet juste de faire l'initialisation de l'account avec le folder_id et une liste de contrats vide
-router.post('/',async (req,res)=>{
+router.post('/init',async (req,res)=>{
     const post = new AccountModel({
-        folder_id : req.body.folder
+        folder_id : req.body.folder_id
     });
     try{   
         const savedPost = await post.save();
@@ -48,7 +62,6 @@ router.post('/',async (req,res)=>{
 //par req.body : JSON
 router.post('/contract/create',async (req,res)=>{
     try{
-        console.log(req.body)
         const updatedPost = await AccountModel.updateOne({folder_id : req.body.folder_id},{
             //pour le $pull, $push j'ai trouvé sur la doc officielle
             //https://docs.mongodb.com/manual/reference/operator/update-array/
@@ -58,7 +71,13 @@ router.post('/contract/create',async (req,res)=>{
                 brand : req.body.brand,
                 model : req.body.model,
                 purchasePrice : req.body.purchasePrice,
-                month_price : req.body.month_price
+                month_price : req.body.month_price,
+                listWarranted :{
+                    panne : false,
+                    casse : false,
+                    vol : false,
+                    oxydation : false
+                }
             }}
         });
         res.json(updatedPost);
@@ -66,6 +85,9 @@ router.post('/contract/create',async (req,res)=>{
         res.json(err);
     }
 });
+
+
+
 
 
 
@@ -100,8 +122,6 @@ router.delete('/contract/all',async (req,res)=>{
 //delete just a contract identified by contract_id from an account identified by folder_id
 router.post('/contract/delete',async (req,res)=>{
     try{
-        console.log("delete")
-        console.log(req.body);
         const rmContract = await AccountModel.update(
         {folder_id : req.body.folder_id},
         //https://docs.mongodb.com/manual/reference/operator/update/pull/
@@ -115,4 +135,38 @@ router.post('/contract/delete',async (req,res)=>{
     }
 });
 
+//update les garanties d'un contract indentifié par le folder_id et contract_id en req.body
+//avec la liste des garanties passées en req.body
+router.post('/contract/update',async (req,res)=>{
+    try{
+        const updateContract = await AccountModel.update(
+            // ma query pour identifier le contract
+        {
+            folder_id : req.body.folder_id,
+        },
+        {
+            $push:{
+                "listWarranted.$.panne" : req.body.panne
+            }
+        }
+
+        // explication elemMatch https://docs.mongodb.com/manual/reference/operator/update/positional/
+        //     mon update
+        // { $set : {
+        //         "listWarranted.$.panne" : req.body.panne
+        //         // "listWarranted.$.casse" : req.body.casse,
+        //         // "listWarranted.$.vol" : req.body.vol,
+        //         // "listWarranted.$.oxydation" : req.body.oxydation,
+        //         }   
+        //     }
+        // )
+        //{$push : {listWarranted :}}
+        )
+        res.json(updateContract);
+    }catch(err){
+        res.json(err);
+    }
+});
+
+router.po
 module.exports =router;
