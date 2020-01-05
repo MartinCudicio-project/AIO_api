@@ -9,16 +9,23 @@ const mongoose = require('mongoose');
 const ContractSchema = mongoose.Schema({
     contract_id : String,
     object : String,
+    brand : String,
+    category : String,
+    model : String,
+    serialNumber : String,
+    purchasePrice : Number,
     month_price : Number,
-    date_enroll : {
-        type : Date,
-        default : Date.now
+    bill_photo : String,
+    imei : String,
+    purchaseDate : {
+        type : Date
     },
-    listWarranted :[{
-        title : String,
-        description : String,
-        rate : Number
-    }]
+    listWarranted :{
+        panne : Boolean,
+        casse : Boolean,
+        vol : Boolean,
+        oxydation : Boolean
+    }
 });
 
 const AccountSchema = mongoose.Schema({

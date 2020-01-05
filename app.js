@@ -9,9 +9,10 @@ const bodyParser=require('body-parser');
 //enables cors
 //ne vous occupez pas de ca, c'est juste pour que tous les ordis
 //soient autorisés à utiliser l'api
+const port = 3000;
 var cors = require('cors');
 app.use(cors({
-  'allowedHeaders': ['sessionId', 'Content-Type'],
+  'allowedHeaders': ['sessionId', 'Content-Type','Authorization'],
   'exposedHeaders': ['sessionId'],
   'origin': '*',
   'methods': 'GET,HEAD,PUT,PATCH,POST,DELETE',
@@ -30,6 +31,6 @@ app.use('/account',accountRoute);
 
 //connect to db
 connectDB();
-const Port = process.env.Port || 3000;
 
-app.listen(Port,()=>console.log("server started"));
+
+app.listen(port,()=>console.log("server started sur le port "+ port));
