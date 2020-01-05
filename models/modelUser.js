@@ -42,7 +42,11 @@ const PostSchema = mongoose.Schema({
             type: String,
             required: false
         }
-    }]
+    }],
+    validate :{
+        type: Boolean,
+        required: true
+    }
     
 });
 
