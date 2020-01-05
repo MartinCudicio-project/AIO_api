@@ -11,6 +11,7 @@ const ContractSchema = mongoose.Schema({
     object : String,
     brand : String,
     model : String,
+    serialNumber : String,
     purchasePrice : Number,
     month_price : Number,
     bill_photo : String,

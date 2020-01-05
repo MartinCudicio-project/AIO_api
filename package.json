@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start" : "env-cmd -f ./.env nodemon src/app.js",
+    "start": "env-cmd -f ./.env nodemon src/app.js",
     "server": "nodemon app.js"
   },
   "author": "martin",
@@ -16,10 +16,13 @@
     "dotenv": "^8.2.0",
     "env-cmd": "^10.0.1",
     "express": "^4.17.1",
+    "i": "^0.3.6",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.12",
     "uuid": "^3.3.3",
-    "validator": "^12.1.0"
+    "validator": "^12.1.0",
+    "vue-multiselect": "^2.1.6",
+    "vue-select": "^3.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.1"
