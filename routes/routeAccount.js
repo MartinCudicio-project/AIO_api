@@ -63,7 +63,7 @@ router.post('/init',async (req,res)=>{
 router.post('/contract/create',async (req,res)=>{
     try{
         console.log(req.body)
-        const updatedPost = await AccountModel.updateOne({folder_id : req.body.folder_id},{
+        const updatedPost = await AccountModel.findOneAndUpdate({folder_id : req.body.folder_id},{
             //pour le $pull, $push j'ai trouvé sur la doc officielle
             //https://docs.mongodb.com/manual/reference/operator/update-array/
             $push : { listContract : {
@@ -76,10 +76,10 @@ router.post('/contract/create',async (req,res)=>{
                 purchasePrice : req.body.purchasePrice,
                 month_price : req.body.month_price,
                 listWarranted :{
-                    panne : false,
-                    casse : false,
-                    vol : false,
-                    oxydation : false
+                    panne : req.body.panne,
+                    casse : req.body.casse,
+                    vol : req.body.casse,
+                    oxydation : req.body.oxydation
                 }
             }}
         });
@@ -138,33 +138,47 @@ router.post('/contract/delete',async (req,res)=>{
     }
 });
 
-//update les garanties d'un contract indentifié par le folder_id et contract_id en req.body
+//update les garanties d'un contract indentifié par le folder_id et contract_id en req.body 
 //avec la liste des garanties passées en req.body
-router.post('/contract/update',async (req,res)=>{
+router.post('/contract/update/warranted',async (req,res)=>{
+    //on fait les verifications si une garantie n'est pas passée en req alors on l'ajoute en false
+    if(req.body.casse == null){
+        req.body.casse = false
+    }
+    if(req.body.vol == null){
+        req.body.vol = false
+    }
+    if(req.body.oxydation == null){
+        req.body.oxydation = false
+    }
+    if(req.body.panne == null){
+        req.body.panne = false
+    }
     try{
+        console.log(req.body)
         const updateContract = await AccountModel.update(
             // ma query pour identifier le contract
         {
             folder_id : req.body.folder_id,
+        }
+        ,
+    // explication $[elem] https://docs.mongodb.com/manual/reference/operator/update/positional/
+        {
+            $set:{
+                "listContract.$[elem].listWarranted" : {
+                    panne: req.body.panne,
+                    casse: req.body.casse,
+                    vol: req.body.vol,
+                    oxydation: req.body.oxydation
+                }
+            }
         },
         {
-            $push:{
-                "listWarranted.$.panne" : req.body.panne
-            }
-        }
-
-        // explication elemMatch https://docs.mongodb.com/manual/reference/operator/update/positional/
-        //     mon update
-        // { $set : {
-        //         "listWarranted.$.panne" : req.body.panne
-        //         // "listWarranted.$.casse" : req.body.casse,
-        //         // "listWarranted.$.vol" : req.body.vol,
-        //         // "listWarranted.$.oxydation" : req.body.oxydation,
-        //         }   
-        //     }
-        // )
-        //{$push : {listWarranted :}}
-        )
+            multi: true,
+            arrayFilters:[ {
+                "elem.contract_id": req.body.contract_id
+            }]
+        })
         res.json(updateContract);
     }catch(err){
         res.json(err);
