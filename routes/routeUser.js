@@ -39,6 +39,23 @@ router.get('/checkEmail/:postEmail', async(req,res)=>{
     }
 });
 
+//permet de modifier la variable de validation de l'email
+// passe la variable false de base à true
+router.get('/emailValidation/:email',async(req,res)=>{
+    try{
+        const post = await User.findOneAndUpdate({
+            email: req.params.email
+        },
+        {   $set:{
+                emailValidation : true
+            }
+        })
+        res.json(post)
+    }catch(err){
+        res.json(err)
+    }
+})
+
 //get back the token in req.body exists in the list Token of user
 router.post('/checkToken/', async(req,res)=>{
     try{
@@ -57,12 +74,12 @@ router.post('/checkToken/', async(req,res)=>{
 //créer un utilisateur avec req.body (JSON)
 router.post('/', async (req, res) => {
     // Create a new user
-    console.log(req.body)
     try {
         const user = new User({
             first_name: req.body.first_name,
             last_name: req.body.last_name,
             email : req.body.email,
+            emailValidation: false,
             password: req.body.password,
             folder : req.body.folder,
             phone : req.body.phone
@@ -75,12 +92,14 @@ router.post('/', async (req, res) => {
     }
 });
 
-
+//permet de verifier l'authentification avec email + password
+//ajout un token à la liste de l'user
 router.post('/login', async(req, res) => {
     //Login a registered user
     try {
         const { email, password } = req.body
         const userTemp = await User.findByCredentials(email, password)
+        console
         if (!userTemp) {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
