@@ -104,7 +104,6 @@ router.post('/login', async(req, res) => {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
         const token = await userTemp.generateAuthToken();
-        console.log("test")
         res.send({ userTemp, token });
     } 
     catch (error) {
@@ -177,7 +176,6 @@ router.delete('/:folderPost', async(req,res)=>{
 // Ajout d'un sinistre dans la base de données
 router.post('/contract/sinister/informations',async (req,res)=>{
     try{
-        console.log(req)
         const updatedPost = await User.findOneAndUpdate({folder : req.body.folder_id},{
             //pour le $pull, $push j'ai trouvé sur la doc officielle
             //https://docs.mongodb.com/manual/reference/operator/update-array/
@@ -191,12 +189,16 @@ router.post('/contract/sinister/informations',async (req,res)=>{
             }
         });
         const updatedPost2 = await account.findOneAndUpdate({folder_id : req.body.folder_id},{
-            $set:{
-                "listContract.$[elem]" : {
-                    isSinistered : true
+                $set:{
+                    "listContract.$[elem].isSinistered" : true
                 }
-            }
-        });
+            },
+            {
+                multi: true,
+                arrayFilters:[ {
+                    "elem.contract_id": req.body.contract_id
+                }]
+            });
         res.json(updatedPost);
         res.json(updatedPost2);
     }catch(err){
