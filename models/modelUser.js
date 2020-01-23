@@ -38,6 +38,10 @@ const PostSchema = mongoose.Schema({
         type :String,
         required: true
     },
+    emailValidation : {
+        type: Boolean,
+        required: true
+    },
     password :{
         type: String,
         required: true
