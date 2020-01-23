@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/modelUser');
 const auth = require('../middleware/auth');
+const account = require('../models/modelAccount');
 
 //ROUTES
 //explication 
@@ -79,25 +80,26 @@ router.post('/', async (req, res) => {
 router.post('/login', async(req, res) => {
     //Login a registered user
     try {
-        const { email, password } = req.body
-        const userTemp = await User.findByCredentials(email, password)
+        const { email, password } = req.body;
+        const userTemp = await User.findByCredentials(email, password);
         if (!userTemp) {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
         const token = await userTemp.generateAuthToken();
+        console.log("test")
         res.send({ userTemp, token });
     } 
     catch (error) {
         res.status(404).send(error)
     }
-})
+});
 
 //cette methode va permettr d'obtenir le profil de l'utilisateur
 //on auth passé en parametres qui se situe dans ../middleware/auth.js
 router.get('/me', auth, async(req, res) => {
     // View logged in user profile
     res.send(req.user)
-})
+});
 
 
 //section 10 
@@ -113,7 +115,7 @@ router.post('/me/logout', auth, async (req, res) => {
     } catch (error) {
         res.status(500).send(error)
     }
-})
+});
 
 router.post('/me/logoutall', auth, async(req, res) => {
     // Log user out of all devices
@@ -124,7 +126,7 @@ router.post('/me/logoutall', auth, async(req, res) => {
     } catch (error) {
         res.status(500).send(error)
     }
-})
+});
 
 
 //get back user_id if he exists (email,pwd)
@@ -149,6 +151,36 @@ router.delete('/:folderPost', async(req,res)=>{
             folder : req.params.folderPost
         });
         res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
+// Ajout d'un sinistre dans la base de données
+router.post('/contract/sinister/informations',async (req,res)=>{
+    try{
+        console.log(req)
+        const updatedPost = await User.findOneAndUpdate({folder : req.body.folder_id},{
+            //pour le $pull, $push j'ai trouvé sur la doc officielle
+            //https://docs.mongodb.com/manual/reference/operator/update-array/
+            $push : { 
+                sinisters:{
+                    contract_id: req.body.contract_id,
+                    sinisterDate : req.body.sinisterDate,
+                    sinisterTime: req.body.sinisterTime,
+                    sinisterCircumstances: req.body.sinisterCircumstances
+                }
+            }
+        });
+        const updatedPost2 = await account.findOneAndUpdate({folder_id : req.body.folder_id},{
+            $set:{
+                "listContract.$[elem]" : {
+                    isSinistered : true
+                }
+            }
+        });
+        res.json(updatedPost);
+        res.json(updatedPost2);
     }catch(err){
         res.json(err);
     }

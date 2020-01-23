@@ -80,7 +80,8 @@ router.post('/contract/create',async (req,res)=>{
                     casse : req.body.casse,
                     vol : req.body.casse,
                     oxydation : req.body.oxydation
-                }
+                },
+                isSinistered: false
             }}
         });
         res.json(updatedPost);
@@ -185,5 +186,4 @@ router.post('/contract/update/warranted',async (req,res)=>{
     }
 });
 
-router.po
 module.exports =router;
