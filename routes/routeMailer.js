@@ -7,9 +7,10 @@ router.post('/send/validationLink', async (req, res) => {
     try {
         const post = {
             first_name: req.body.first_name,
-            mail: req.body.mail,
+            mail: req.body.email,
             folder: req.body.folder
         };
+        console.log(post);
         const envoi = emailSend(post);
         res.json(envoi);
     } catch (err) {
