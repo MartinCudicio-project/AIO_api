@@ -25,9 +25,11 @@ app.use(bodyParser.json())
 
 const userRoute = require('./routes/routeUser');
 const accountRoute = require('./routes/routeAccount');
+const mailRoute = require('./routes/routeMailer');
 
 app.use('/users',userRoute);
 app.use('/account',accountRoute);
+app.use('/mail',mailRoute);
 
 //connect to db
 connectDB();

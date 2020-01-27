@@ -66,7 +66,12 @@ const PostSchema = mongoose.Schema({
             required: false
         }
     }],
-    sinisters:[SinisterSchema]
+    sinisters:[SinisterSchema],
+    user_validated:{
+        type: Boolean,
+        required: true
+    }
+    
 });
 
 PostSchema.pre('save',async function(next){
