@@ -35,7 +35,7 @@ function emailSend(post){
       from: "confirmation.aio@gmail.com",
       to: post.mail,
       subject: "Confirm AIO Account",
-      text: `Hello ${post.first_name} \n\nClick on this link to validate your account : http://localhost:3000/users/emailValidation/${post.folder}`
+      text: `Hello ${post.first_name} \n\nClick on this link to validate your account : http://localhost:8080/users/emailValidation/${post.folder}`
     };
     transporter.sendMail(mailOptions, function (err) {
       if (err) {
