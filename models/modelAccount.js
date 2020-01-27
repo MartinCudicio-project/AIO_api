@@ -25,7 +25,8 @@ const ContractSchema = mongoose.Schema({
         casse : Boolean,
         vol : Boolean,
         oxydation : Boolean
-    }
+    },
+    isSinistered: Boolean
 });
 
 const AccountSchema = mongoose.Schema({
