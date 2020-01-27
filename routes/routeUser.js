@@ -26,6 +26,22 @@ router.get('/all',async(req,res)=>{
         res.json({message:err});
     }
 });
+// -----------------MODIFY AN ACCOUNT---------------------
+//return an account with its token
+router.get('/:tokenId',async(req,res)=>{
+    try{
+        const posts = await User.findOne(
+            {token: req.params.tokenID }
+        );
+        res.json(posts);
+    }catch(err){
+        res.json({message:err});
+    }
+});
+
+
+
+// -------------------------------------------------------
 
 //get back if is a user is unique with the email
 router.get('/checkEmail/:postEmail', async(req,res)=>{
@@ -68,9 +84,6 @@ router.post('/checkToken/', async(req,res)=>{
     }
 });
 
-
-
-
 //créer un utilisateur avec req.body (JSON)
 router.post('/', async (req, res) => {
     // Create a new user
@@ -99,7 +112,6 @@ router.post('/login', async(req, res) => {
     try {
         const { email, password } = req.body
         const userTemp = await User.findByCredentials(email, password)
-        console
         if (!userTemp) {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
@@ -107,7 +119,7 @@ router.post('/login', async(req, res) => {
         res.send({ userTemp, token });
     } 
     catch (error) {
-        res.status(404).send(error)
+        res.status(404).send(error);
     }
 })
 
