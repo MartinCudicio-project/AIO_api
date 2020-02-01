@@ -58,10 +58,10 @@ router.get('/checkEmail/:postEmail', async(req,res)=>{
 
 //permet de modifier la variable de validation de l'email
 // passe la variable false de base à true
-router.get('/emailValidation/:email',async(req,res)=>{
+router.get('/emailValidation/:folder',async(req,res)=>{
     try{
         const post = await User.findOneAndUpdate({
-            email: req.params.email
+            folder: req.params.folder
         },
         {   $set:{
                 emailValidation : true
@@ -116,7 +116,9 @@ router.post('/login', async(req, res) => {
         if (!userTemp) {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
+        console.log("avant token")
         const token = await userTemp.generateAuthToken();
+        console.log("apres token")
         res.send({ userTemp, token });
     } 
     catch (error) {
