@@ -22,7 +22,13 @@ const SinisterSchema = mongoose.Schema({
     sinisterCircumstances: {
         type : String,
         required : true
+    },
+    sinisterStep: {
+        type : String,
+        required : true,
+        default : "1"
     }
+
 })
 
 const PostSchema = mongoose.Schema({
