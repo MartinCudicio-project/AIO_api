@@ -6,6 +6,31 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const JWT_KEY = "WinterIsComing2019"
 
+const SinisterSchema = mongoose.Schema({
+    contract_id : {
+        type : String,
+        required : true
+    },
+    sinisterDate: {
+        type : String,
+        required : true
+    },
+    sinisterTime: {
+        type : String,
+        required : true
+    },
+    sinisterCircumstances: {
+        type : String,
+        required : true
+    },
+    sinisterStep: {
+        type : String,
+        required : true,
+        default : "1"
+    }
+
+})
+
 const PostSchema = mongoose.Schema({
     first_name : {
         type :String,
@@ -17,6 +42,10 @@ const PostSchema = mongoose.Schema({
     },
     email : {
         type :String,
+        required: true
+    },
+    emailValidation : {
+        type: Boolean,
         required: true
     },
     password :{
@@ -43,11 +72,7 @@ const PostSchema = mongoose.Schema({
             required: false
         }
     }],
-    validate :{
-        type: Boolean,
-        required: true
-    }
-    
+    sinisters:[SinisterSchema]
 });
 
 PostSchema.pre('save',async function(next){
