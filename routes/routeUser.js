@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require('../models/modelUser');
 const auth = require('../middleware/auth');
 const account = require('../models/modelAccount');
+const superUser = require('../models/modelSuperUser');
 
 //ROUTES
 //explication 
