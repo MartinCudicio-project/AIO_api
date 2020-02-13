@@ -6,31 +6,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const JWT_KEY = "WinterIsComing2019"
 
-const SinisterSchema = mongoose.Schema({
-    contract_id : {
-        type : String,
-        required : true
-    },
-    sinisterDate: {
-        type : String,
-        required : true
-    },
-    sinisterTime: {
-        type : String,
-        required : true
-    },
-    sinisterCircumstances: {
-        type : String,
-        required : true
-    },
-    sinisterStep: {
-        type : String,
-        required : true,
-        default : "1"
-    }
-
-})
-
 const PostSchema = mongoose.Schema({
     first_name : {
         type :String,
@@ -58,13 +33,9 @@ const PostSchema = mongoose.Schema({
         //servira dans une autre collection comme clé primaire pour recuperer les dossiers etc..
         type: String
     },
-    photo :{
-        type: String,
-        required: false
-    },
     phone :{
         type: String,
-        require: true
+        required: true
     },
     tokens :[{
         token:{
@@ -72,12 +43,10 @@ const PostSchema = mongoose.Schema({
             required: false
         }
     }],
-    sinisters:[SinisterSchema],
-    user_validated:{
+    isSuperUser :{
         type: Boolean,
-        required: true
+        required: true,
     }
-    
 });
 
 PostSchema.pre('save',async function(next){
@@ -100,7 +69,7 @@ PostSchema.methods.generateAuthToken = async function() {
 
 PostSchema.statics.findByCredentials = async function(email, password){
     // Search for a user by email and password.
-    const user = await User.findOne({ email} )
+    const user = await SuperUser.findOne({ email} )
     if (!user) {
         throw new Error({ error: 'Invalid login credentials' })
     }
@@ -112,5 +81,5 @@ PostSchema.statics.findByCredentials = async function(email, password){
     return user
 }
 
-const User = mongoose.model('users',PostSchema);
-module.exports = User;
+const SuperUser = mongoose.model('superUser',PostSchema);
+module.exports = SuperUser;

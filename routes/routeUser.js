@@ -4,6 +4,7 @@ const router = express.Router();
 const User = require('../models/modelUser');
 const auth = require('../middleware/auth');
 const account = require('../models/modelAccount');
+const superUser = require('../models/modelSuperUser');
 
 //ROUTES
 //explication 
@@ -85,6 +86,17 @@ router.post('/checkToken/', async(req,res)=>{
     }
 });
 
+router.post('/getUser', async(req,res)=>{
+    try{
+        const post = await User.findOne({
+            folder : req.body.folder_id,
+        });
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
 //créer un utilisateur avec req.body (JSON)
 router.post('/', async (req, res) => {
     // Create a new user
@@ -124,7 +136,7 @@ router.post('/login', async(req, res) => {
     }
 });
 
-//cette methode va permettr d'obtenir le profil de l'utilisateur
+//cette methode va permettre d'obtenir le profil de l'utilisateur
 //on auth passé en parametres qui se situe dans ../middleware/auth.js
 router.get('/me', auth, async(req, res) => {
     // View logged in user profile
