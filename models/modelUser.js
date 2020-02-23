@@ -73,10 +73,12 @@ const PostSchema = mongoose.Schema({
         }
     }],
     sinisters:[SinisterSchema],
-    user_validated:{
+    /*user_validated:{
         type: Boolean,
         required: true
-    }
+    }*/
+    // le user validated fait tout bug parceque 
+    // il a pas ete rajoute dans toutes les fonctions qui creent des users / se log
     
 });
 

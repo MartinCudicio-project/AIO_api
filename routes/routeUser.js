@@ -4,7 +4,6 @@ const router = express.Router();
 const User = require('../models/modelUser');
 const auth = require('../middleware/auth');
 const account = require('../models/modelAccount');
-const superUser = require('../models/modelSuperUser');
 
 //ROUTES
 //explication 
@@ -22,7 +21,7 @@ HTTP post /users/logoutall - Déconnexion de tous les appareils.
 //get back all the users
 router.get('/all',async(req,res)=>{
     try{
-        const posts = await User.find();
+        const posts = await User.find()
         res.json(posts);
     }catch(err){
         res.json({message:err});
@@ -110,8 +109,9 @@ router.post('/', async (req, res) => {
             folder : req.body.folder,
             phone : req.body.phone
         })
+        console.log(user)
         await user.save()
-        //const token = await user.generateAuthToken();
+        const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
     } catch (error) {
         res.status(400).json(error);
