@@ -21,7 +21,7 @@ HTTP post /users/logoutall - Déconnexion de tous les appareils.
 //get back all the users
 router.get('/all',async(req,res)=>{
     try{
-        const posts = await User.find();
+        const posts = await User.find()
         res.json(posts);
     }catch(err){
         res.json({message:err});
@@ -85,6 +85,17 @@ router.post('/checkToken/', async(req,res)=>{
     }
 });
 
+router.post('/getUser', async(req,res)=>{
+    try{
+        const post = await User.findOne({
+            folder : req.body.folder_id,
+        });
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
 //créer un utilisateur avec req.body (JSON)
 router.post('/', async (req, res) => {
     // Create a new user
@@ -98,8 +109,9 @@ router.post('/', async (req, res) => {
             folder : req.body.folder,
             phone : req.body.phone
         })
+        console.log(user)
         await user.save()
-        //const token = await user.generateAuthToken();
+        const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
     } catch (error) {
         res.status(400).json(error);
@@ -126,7 +138,7 @@ router.post('/login', async(req, res) => {
     }
 });
 
-//cette methode va permettr d'obtenir le profil de l'utilisateur
+//cette methode va permettre d'obtenir le profil de l'utilisateur
 //on auth passé en parametres qui se situe dans ../middleware/auth.js
 router.get('/me', auth, async(req, res) => {
     // View logged in user profile

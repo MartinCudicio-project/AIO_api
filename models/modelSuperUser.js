@@ -6,31 +6,6 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const JWT_KEY = "WinterIsComing2019"
 
-const SinisterSchema = mongoose.Schema({
-    contract_id : {
-        type : String,
-        required : false
-    },
-    sinisterDate: {
-        type : String,
-        required : false
-    },
-    sinisterTime: {
-        type : String,
-        required : false
-    },
-    sinisterCircumstances: {
-        type : String,
-        required : true
-    },
-    sinisterStep: {
-        type : String,
-        required : true,
-        default : "1"
-    }
-
-})
-
 const PostSchema = mongoose.Schema({
     first_name : {
         type :String,
@@ -58,13 +33,9 @@ const PostSchema = mongoose.Schema({
         //servira dans une autre collection comme clé primaire pour recuperer les dossiers etc..
         type: String
     },
-    photo :{
-        type: String,
-        required: false
-    },
     phone :{
         type: String,
-        require: false
+        required: true
     },
     tokens :[{
         token:{
@@ -72,14 +43,10 @@ const PostSchema = mongoose.Schema({
             required: false
         }
     }],
-    sinisters:[SinisterSchema],
-    /*user_validated:{
+    isSuperUser :{
         type: Boolean,
-        required: true
-    }*/
-    // le user validated fait tout bug parceque 
-    // il a pas ete rajoute dans toutes les fonctions qui creent des users / se log
-    
+        required: true,
+    }
 });
 
 PostSchema.pre('save',async function(next){
@@ -94,29 +61,25 @@ PostSchema.pre('save',async function(next){
 PostSchema.methods.generateAuthToken = async function() {
     // Generate an auth token for the user
     const user = this
-    if(user.emailValidation==true){
-        const token = jwt.sign({_id: user._id}, JWT_KEY)
-        user.tokens = user.tokens.concat({token})
-        await user.save()
-        return token
-    }
-    else
-        return null
+    const token = jwt.sign({_id: user._id}, JWT_KEY)
+    user.tokens = user.tokens.concat({token})
+    await user.save()
+    return token
 }
 
 PostSchema.statics.findByCredentials = async function(email, password){
     // Search for a user by email and password.
-    const user = await User.findOne({ email} )
+    const user = await SuperUser.findOne({ email} )
     if (!user) {
         throw new Error({ error: 'Invalid login credentials' })
     }
     const isPasswordMatch = await bcrypt.compare(password, user.password)
     
     if (!isPasswordMatch) {
-        throw new Error({ error: 'Invalid login credentials'})
+        throw new Error({ error: 'Invalid login credentials' })
     }
     return user
 }
 
-const User = mongoose.model('users',PostSchema);
-module.exports = User;
+const SuperUser = mongoose.model('superUser',PostSchema);
+module.exports = SuperUser;
