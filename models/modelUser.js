@@ -9,15 +9,15 @@ const JWT_KEY = "WinterIsComing2019"
 const SinisterSchema = mongoose.Schema({
     contract_id : {
         type : String,
-        required : true
+        required : false
     },
     sinisterDate: {
         type : String,
-        required : true
+        required : false
     },
     sinisterTime: {
         type : String,
-        required : true
+        required : false
     },
     sinisterCircumstances: {
         type : String,
@@ -64,7 +64,7 @@ const PostSchema = mongoose.Schema({
     },
     phone :{
         type: String,
-        require: true
+        require: false
     },
     tokens :[{
         token:{
@@ -94,10 +94,14 @@ PostSchema.pre('save',async function(next){
 PostSchema.methods.generateAuthToken = async function() {
     // Generate an auth token for the user
     const user = this
-    const token = jwt.sign({_id: user._id}, JWT_KEY)
-    user.tokens = user.tokens.concat({token})
-    await user.save()
-    return token
+    if(user.emailValidation==true){
+        const token = jwt.sign({_id: user._id}, JWT_KEY)
+        user.tokens = user.tokens.concat({token})
+        await user.save()
+        return token
+    }
+    else
+        return null
 }
 
 PostSchema.statics.findByCredentials = async function(email, password){
@@ -109,7 +113,7 @@ PostSchema.statics.findByCredentials = async function(email, password){
     const isPasswordMatch = await bcrypt.compare(password, user.password)
     
     if (!isPasswordMatch) {
-        throw new Error({ error: 'Invalid login credentials' })
+        throw new Error({ error: 'Invalid login credentials'})
     }
     return user
 }
