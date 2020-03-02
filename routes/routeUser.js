@@ -85,6 +85,7 @@ router.post('/checkToken/', async(req,res)=>{
     }
 });
 
+//retourne l'utilisateur correspondant au folder_id pris en entrée
 router.post('/getUser', async(req,res)=>{
     try{
         const post = await User.findOne({
@@ -92,6 +93,44 @@ router.post('/getUser', async(req,res)=>{
         });
         res.json(post);
     }catch(err){
+        res.json(err);
+    }
+});
+
+router.post('/contract/getsinister',async(req,res)=>{
+    try{
+        const stock = await User.findOne({
+            folder : req.body.folder_id,
+        });
+        stock.sinisters.forEach(element => {
+        if (element.contract_id === req.body.contract_id)
+        {
+            res.json(element)
+        }
+        });
+    }catch(err){
+        res.json(err);
+    }
+});
+
+router.post('/contract/updatesinister',async(req,res)=>{
+    try{
+        const updateSinister = await User.updateOne(
+        {folder : req.body.folder_id}
+        ,
+        {
+            $set:{
+                "sinisters.$[elem]": req.body.sinister
+            }
+        },
+        {
+            arrayFilters:[ {
+                "elem.contract_id": req.body.sinister.contract_id
+            }]
+        })
+        res.post(updateSinister)
+    }
+    catch(err){
         res.json(err);
     }
 });

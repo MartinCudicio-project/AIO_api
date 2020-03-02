@@ -156,7 +156,6 @@ router.post('/contract/update/warranted',async (req,res)=>{
         req.body.panne = false
     }
     try{
-        console.log(req.body)
         const updateContract = await AccountModel.update(
             // ma query pour identifier le contract
         {
