@@ -5,22 +5,22 @@ const nodemailer = require('nodemailer');
 require('dotenv').config();
 router.post('/send/validationLink', async (req, res) => {
     try {
-        const post = {
-            first_name: req.body.first_name,
-            mail: req.body.email,
-            folder: req.body.folder
+        
+        const intent = {
+            subject: "",
+            text: `Hello ${req.body.first_name} \n\nClick on this link to validate your account : http://localhost:3000/users/emailValidation/${req.body.folder}`
         };
-        console.log(post);
-        const envoi = emailSend(post);
+        const envoi = emailSend(req.body.mail,intent);
         res.json(envoi);
     } catch (err) {
         res.json({
             err
         });
     }
-
 });
-function emailSend(post){
+
+// take in parameter user, intent (subject + text)
+function emailSend(email,intent){
     var retour = false;
     let transporter = nodemailer.createTransport({
       service: "gmail",
@@ -33,9 +33,9 @@ function emailSend(post){
     });
     let mailOptions = {
       from: "confirmation.aio@gmail.com",
-      to: post.mail,
-      subject: "Confirm AIO Account",
-      text: `Hello ${post.first_name} \n\nClick on this link to validate your account : http://localhost:3000/users/emailValidation/${post.folder}`
+      to: email,
+      subject: intent.subject,
+      text: intent.text
     };
     transporter.sendMail(mailOptions, function (err) {
       if (err) {
