@@ -62,11 +62,11 @@ router.post('/init',async (req,res)=>{
 //par req.body : JSON
 router.post('/contract/create',async (req,res)=>{
     try{
-        console.log(req.body)
         const updatedPost = await AccountModel.findOneAndUpdate({folder_id : req.body.folder_id},{
-            //pour le $pull, $push j'ai trouvé sur la doc officielle
-            //https://docs.mongodb.com/manual/reference/operator/update-array/
-            $push : { listContract : {
+        //pour le $pull, $push j'ai trouvé sur la doc officielle
+        //https://docs.mongodb.com/manual/reference/operator/update-array/
+        $push : { 
+            listContract : {
                 contract_id : uuidv4(),
                 object : req.body.object,
                 category : req.body.category,
@@ -81,7 +81,15 @@ router.post('/contract/create',async (req,res)=>{
                     vol : req.body.casse,
                     oxydation : req.body.oxydation
                 },
-                isSinistered: false
+                historyWarranted : [{
+                    panne : req.body.panne,
+                    casse : req.body.casse,
+                    vol : req.body.casse,
+                    oxydation : req.body.oxydation,
+                    modificationDate : new Date()
+                }],
+                isSinistered: false,
+                contractDate : new Date()
             }}
         });
         res.json(updatedPost);
@@ -143,6 +151,7 @@ router.post('/contract/delete',async (req,res)=>{
 //avec la liste des garanties passées en req.body
 router.post('/contract/update/warranted',async (req,res)=>{
     //on fait les verifications si une garantie n'est pas passée en req alors on l'ajoute en false
+    console.log(req.body)
     if(req.body.casse == null){
         req.body.casse = false
     }
@@ -171,9 +180,19 @@ router.post('/contract/update/warranted',async (req,res)=>{
                     vol: req.body.vol,
                     oxydation: req.body.oxydation
                 }
-            }
-        },
-        {
+            },
+            
+            $push:{
+                "listContract.$[elem].historyWarranted" : {
+                        panne: req.body.panne,
+                        casse: req.body.casse,
+                        vol: req.body.vol,
+                        oxydation: req.body.oxydation,
+                        modificationDate : new Date()
+                    }
+                }
+        }
+        ,{
             multi: true,
             arrayFilters:[ {
                 "elem.contract_id": req.body.contract_id

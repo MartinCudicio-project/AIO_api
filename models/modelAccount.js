@@ -26,7 +26,16 @@ const ContractSchema = mongoose.Schema({
         vol : Boolean,
         oxydation : Boolean
     },
-    isSinistered: Boolean
+    historyWarranted : [{
+        panne : Boolean,
+        casse : Boolean,
+        vol : Boolean,
+        oxydation : Boolean,
+        modificationDate : Date
+    }],
+    isSinistered: Boolean,
+    contractDate : Date
+
 });
 
 const AccountSchema = mongoose.Schema({
