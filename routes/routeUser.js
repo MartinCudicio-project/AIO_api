@@ -97,6 +97,17 @@ router.post('/getUser', async(req,res)=>{
     }
 });
 
+router.post('/getUserByEmail',async(req,res)=>{
+    console.log("ok")
+    try{
+        const post = await User.find({
+            email : {$regex: req.body.email}});
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
 router.post('/contract/getsinister',async(req,res)=>{
     try{
         const stock = await User.findOne({
