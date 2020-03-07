@@ -98,8 +98,8 @@ router.post('/getUser', async(req,res)=>{
 });
 
 router.post('/getUserByEmail',async(req,res)=>{
-    console.log("ok")
     try{
+        console.log(req.body)
         const post = await User.find({
             email : {$regex: req.body.email}});
         res.json(post);
@@ -178,9 +178,7 @@ router.post('/login', async(req, res) => {
         if (!userTemp) {
             return res.status(401).send({error: 'Login failed! Check authentication credentials'})
         }
-        console.log("avant token")
         const token = await userTemp.generateAuthToken();
-        console.log("apres token")
         res.send({ userTemp, token });
     } 
     catch (error) {

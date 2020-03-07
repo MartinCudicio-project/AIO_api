@@ -22,6 +22,8 @@ app.use(cors({
 //middlewares
 app.use(bodyParser.json())
 
+connectDB();
+
 
 const userRoute = require('./routes/routeUser');
 const accountRoute = require('./routes/routeAccount');
@@ -32,9 +34,6 @@ app.use('/mail',mailRoute);
 app.use('/users',userRoute);
 app.use('/account',accountRoute);
 app.use('/superUser',superUserRoute)
-
-//connect to db
-connectDB();
 
 
 app.listen(port,()=>console.log("server started sur le port "+ port));
