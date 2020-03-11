@@ -2,6 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 const User = require('../models/modelUser');
+const SuperUser = require('../models/modelSuperUser')
 const auth = require('../middleware/auth');
 const account = require('../models/modelAccount');
 
@@ -76,7 +77,10 @@ router.get('/emailValidation/:folder',async(req,res)=>{
 //get back the token in req.body exists in the list Token of user
 router.post('/checkToken/', async(req,res)=>{
     try{
-        const post = await User.findOne(
+        var post = await User.findOne(
+            {tokens: {$elemMatch: {token:req.body.token}}
+        }).count()
+        post += await SuperUser.findOne(
             {tokens: {$elemMatch: {token:req.body.token}}
         }).count()
         res.json(post);

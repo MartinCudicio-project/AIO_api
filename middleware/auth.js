@@ -9,9 +9,15 @@ const auth = async(req, res, next) => {
     const token = req.header('Authorization').replace('Bearer ', '')
     const data = jwt.verify(token, JWT_KEY)
     try {
-        const user = await User.findOne({ _id: data._id, 'tokens.token': token })
+        var user = await User.findOne({ _id: data._id, 'tokens.token': token })
         if (!user) {
-            throw new Error()
+            user = await SuperUser.findOne({ _id: data._id, 'tokens.token': token })
+            if (!user) {
+                throw new Error()
+            }
+            req.user = user
+            req.token = token
+            next()
         }
         req.user = user
         req.token = token
