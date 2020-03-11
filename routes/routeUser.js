@@ -67,7 +67,7 @@ router.get('/emailValidation/:folder',async(req,res)=>{
                 emailValidation : true
             }
         })
-        res.json(post)
+        res.redirect('http://localhost:8080/')
     }catch(err){
         res.json(err)
     }
