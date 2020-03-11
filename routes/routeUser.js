@@ -99,7 +99,6 @@ router.post('/getUser', async(req,res)=>{
 
 router.post('/getUserByEmail',async(req,res)=>{
     try{
-        console.log(req.body)
         const post = await User.find({
             email : {$regex: req.body.email}});
         res.json(post);
