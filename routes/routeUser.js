@@ -125,6 +125,9 @@ router.post('/contract/getsinister',async(req,res)=>{
 
 router.post('/contract/updatesinister',async(req,res)=>{
     try{
+        if(req.body.sinister['sinisterStep']<2)
+            req.body.sinister['sinisterStep']+=1
+        console.log(req.body)
         const updateSinister = await User.updateOne(
         {folder : req.body.folder_id}
         ,

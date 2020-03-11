@@ -24,9 +24,9 @@ const SinisterSchema = mongoose.Schema({
         required : true
     },
     sinisterStep: {
-        type : String,
+        type : Number,
         required : true,
-        default : "1"
+        default : 0
     }
 
 })
