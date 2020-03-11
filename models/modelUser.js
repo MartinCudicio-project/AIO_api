@@ -64,7 +64,7 @@ const PostSchema = mongoose.Schema({
     },
     phone :{
         type: String,
-        require: false
+        required: false
     },
     tokens :[{
         token:{
