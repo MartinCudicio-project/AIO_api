@@ -287,4 +287,20 @@ router.post('/contract/sinister/informations',async (req,res)=>{
     }
 });
 
+router.post('/updateUserInfos',async (req,res)=>{
+    try{
+        const post = await User.findOneAndUpdate({folder : req.body.folder},
+        {$set : { 
+                email: req.body.email,
+                first_name:req.body.first_name,
+                last_name:req.body.last_name,
+                phone:req.body.phone
+            }
+        });
+        res.json(post);
+    }catch(err){
+        res.json(err);
+    }
+});
+
 module.exports =router;
