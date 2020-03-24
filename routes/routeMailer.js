@@ -6,12 +6,11 @@ require('dotenv').config();
 
 router.post('/send/validationLink', async (req, res) => {
     try {
-        
         const intent = {
             subject: "",
             text: `Hello ${req.body.first_name} \n\nClick on this link to validate your account : http://localhost:3000/users/emailValidation/${req.body.folder}`
         };
-        const envoi = emailSend(req.body.mail,intent);
+        const envoi = emailSend(req.body.email,intent);
         res.json(envoi);
     } catch (err) {
         res.json({
@@ -24,7 +23,6 @@ router.post('/send/updateWarranted', async (req, res) => {
   try {
     var listWar = "";
     const contract = req.body
-    console.log(contract)
     if(contract.panne)
     {
       listWar+="la panne \n"
@@ -47,7 +45,6 @@ router.post('/send/updateWarranted', async (req, res) => {
         your product will be insured from the ${contract.m}/${contract.d} The guarantees contracted are :\n :
         ${listWar}`
     };
-    console.log(intent)
     const envoi = emailSend(contract.email,intent);
     res.json(envoi);
   } catch (err) {

@@ -181,7 +181,6 @@ router.post('/', async (req, res) => {
             folder : req.body.folder,
             phone : req.body.phone
         })
-        console.log(user)
         await user.save()
         const token = await user.generateAuthToken();
         res.status(201).send({ user, token });

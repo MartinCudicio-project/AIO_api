@@ -72,7 +72,7 @@ const PostSchema = mongoose.Schema({
             required: false
         }
     }],
-    sinisters:[SinisterSchema],
+    sinisters:[SinisterSchema]
     /*user_validated:{
         type: Boolean,
         required: true
@@ -97,7 +97,11 @@ PostSchema.methods.generateAuthToken = async function() {
     if(user.emailValidation==true){
         const token = jwt.sign({_id: user._id}, JWT_KEY)
         user.tokens = user.tokens.concat({token})
+        console.log(user)
+        console.log(token)
         await user.save()
+        console.log("apres save")
+        console.log(user)
         return token
     }
     else
