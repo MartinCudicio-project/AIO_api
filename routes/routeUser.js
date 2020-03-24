@@ -131,7 +131,6 @@ router.post('/contract/updatesinister',async(req,res)=>{
     try{
         if(req.body.sinister['sinisterStep']<2)
             req.body.sinister['sinisterStep']+=1
-        console.log(req.body)
         const updateSinister = await User.updateOne(
         {folder : req.body.folder_id}
         ,
@@ -165,7 +164,6 @@ router.post('/', async (req, res) => {
             folder : req.body.folder,
             phone : req.body.phone
         })
-        console.log(user)
         await user.save()
         const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
