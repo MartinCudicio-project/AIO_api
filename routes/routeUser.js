@@ -154,7 +154,7 @@ router.post('/contract/updatesinister',async(req,res)=>{
 router.post('/unvalidateUser',async(req,res)=>{
     try{
         const updateUser = await User.updateOne(
-        {folder : req.body.folder_id}
+        {folder : req.body.folder}
         ,
         {
             $set:{

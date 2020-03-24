@@ -151,7 +151,6 @@ router.post('/contract/delete',async (req,res)=>{
 //avec la liste des garanties passées en req.body
 router.post('/contract/update/warranted',async (req,res)=>{
     //on fait les verifications si une garantie n'est pas passée en req alors on l'ajoute en false
-    console.log(req.body)
     if(req.body.casse == null){
         req.body.casse = false
     }

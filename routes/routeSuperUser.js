@@ -62,7 +62,6 @@ router.post('/', async (req, res) => {
         const token = await user.generateAuthToken();
         res.status(201).send({ user, token });
     } catch (error) {
-        console.log(error)
         res.status(400).json(error);
     }
 });
