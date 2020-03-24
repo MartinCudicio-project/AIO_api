@@ -131,7 +131,6 @@ router.post('/contract/updatesinister',async(req,res)=>{
     try{
         if(req.body.sinister['sinisterStep']<2)
             req.body.sinister['sinisterStep']+=1
-        console.log(req.body)
         const updateSinister = await User.updateOne(
         {folder : req.body.folder_id}
         ,
@@ -146,6 +145,23 @@ router.post('/contract/updatesinister',async(req,res)=>{
             }]
         })
         res.post(updateSinister)
+    }
+    catch(err){
+        res.json(err);
+    }
+});
+
+router.post('/unvalidateUser',async(req,res)=>{
+    try{
+        const updateUser = await User.updateOne(
+        {folder : req.body.folder_id}
+        ,
+        {
+            $set:{
+                emailValidation : false
+            }
+        });
+        res.post(updateUser)
     }
     catch(err){
         res.json(err);
