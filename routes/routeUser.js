@@ -153,18 +153,15 @@ router.post('/contract/updatesinister',async(req,res)=>{
 
 router.post('/unvalidateUser',async(req,res)=>{
     try{
-        const updateUser = await User.updateOne(
-        {folder : req.body.folder}
-        ,
-        {
-            $set:{
+        const post = await User.findOneAndUpdate({
+            folder: req.params.folder
+        },
+        {   $set:{
                 emailValidation : false
             }
-        });
-        res.post(updateUser)
-    }
-    catch(err){
-        res.json(err);
+        })
+    }catch(err){
+        res.json(err)
     }
 });
 
