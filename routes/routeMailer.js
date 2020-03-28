@@ -23,10 +23,10 @@ router.post('/send/updateWarranted', async (req, res) => {
   try {
     var listWar = "";
     const contract = req.body
-    if(contract.panne)
-    {
-      listWar+="la panne \n"
-    }
+    // if(contract.panne)
+    // {
+    //   listWar+="la panne \n"
+    // }
     if(contract.vol)
     {
       listWar+="le vol \n"

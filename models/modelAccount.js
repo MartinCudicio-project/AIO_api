@@ -21,13 +21,13 @@ const ContractSchema = mongoose.Schema({
         type : Date
     },
     listWarranted :{
-        panne : Boolean,
+        // panne : Boolean,
         casse : Boolean,
         vol : Boolean,
         oxydation : Boolean
     },
     historyWarranted : [{
-        panne : Boolean,
+        // panne : Boolean,
         casse : Boolean,
         vol : Boolean,
         oxydation : Boolean,

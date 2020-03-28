@@ -76,13 +76,13 @@ router.post('/contract/create',async (req,res)=>{
                 purchasePrice : req.body.purchasePrice,
                 month_price : req.body.month_price,
                 listWarranted :{
-                    panne : req.body.panne,
+                    // panne : req.body.panne,
                     casse : req.body.casse,
                     vol : req.body.casse,
                     oxydation : req.body.oxydation
                 },
                 historyWarranted : [{
-                    panne : req.body.panne,
+                    // panne : req.body.panne,
                     casse : req.body.casse,
                     vol : req.body.casse,
                     oxydation : req.body.oxydation,
@@ -160,9 +160,9 @@ router.post('/contract/update/warranted',async (req,res)=>{
     if(req.body.oxydation == null){
         req.body.oxydation = false
     }
-    if(req.body.panne == null){
-        req.body.panne = false
-    }
+    // if(req.body.panne == null){
+    //     req.body.panne = false
+    // }
     try{
         const updateContract = await AccountModel.update(
             // ma query pour identifier le contract
@@ -174,7 +174,7 @@ router.post('/contract/update/warranted',async (req,res)=>{
         {
             $set:{
                 "listContract.$[elem].listWarranted" : {
-                    panne: req.body.panne,
+                    // panne: req.body.panne,
                     casse: req.body.casse,
                     vol: req.body.vol,
                     oxydation: req.body.oxydation
@@ -183,7 +183,7 @@ router.post('/contract/update/warranted',async (req,res)=>{
             
             $push:{
                 "listContract.$[elem].historyWarranted" : {
-                        panne: req.body.panne,
+                        // panne: req.body.panne,
                         casse: req.body.casse,
                         vol: req.body.vol,
                         oxydation: req.body.oxydation,

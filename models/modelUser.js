@@ -27,6 +27,10 @@ const SinisterSchema = mongoose.Schema({
         type : Number,
         required : true,
         default : 0
+    },
+    sinisterType: {
+        type : String,
+        required : true,
     }
 
 })
