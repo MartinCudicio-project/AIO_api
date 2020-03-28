@@ -23,10 +23,6 @@ router.post('/send/updateWarranted', async (req, res) => {
   try {
     var listWar = "";
     const contract = req.body
-    // if(contract.panne)
-    // {
-    //   listWar+="la panne \n"
-    // }
     if(contract.vol)
     {
       listWar+="le vol \n"
@@ -46,6 +42,41 @@ router.post('/send/updateWarranted', async (req, res) => {
         ${listWar}`
     };
     const envoi = emailSend(contract.email,intent);
+    res.json(envoi);
+  } catch (err) {
+      res.json({
+          err
+      });
+  }
+});
+
+router.post('/send/createContract', async (req, res) => {
+  try {
+    const contract = req.body.contract
+    const email = req.body.email
+    const name = req.body.name
+    var intent = {
+        subject: "Création de votre contrat",
+        text: `Bonjour ${name},
+        Voicu un récapitulatif de votre nouvelle subscription :
+        Appareil : ${contract.object}
+        Catégorie : ${contract.category}
+        Marque : ${contract.brand}
+        Model : ${contract.model}
+        Numéro de série : ${contract.serialNumber}
+        Prix d'achat : ${contract.purchasedPrice}
+        Prix mensuel : ${contract.month_price}\n`
+    };
+    if(contract.casse===true){
+      intent.text+=`casse : oui\n`
+    }
+    if(contract.vol===true){
+      intent.text+=`vol : oui\n`
+    }
+    if(contract.oxydation===true){
+      intent.text+=`oxydation : oui\n`
+    }
+    const envoi = emailSend(email,intent);
     res.json(envoi);
   } catch (err) {
       res.json({

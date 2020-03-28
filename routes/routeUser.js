@@ -68,6 +68,7 @@ router.get('/emailValidation/:folder',async(req,res)=>{
                 emailValidation : true
             }
         })
+        res.post(post)
         res.redirect('http://localhost:8080/')
     }catch(err){
         res.json(err)
@@ -153,13 +154,15 @@ router.post('/contract/updatesinister',async(req,res)=>{
 
 router.post('/unvalidateUser',async(req,res)=>{
     try{
+        console.log(req.body)
         const post = await User.findOneAndUpdate({
-            folder: req.params.folder
+            folder: req.body.folder
         },
         {   $set:{
                 emailValidation : false
             }
         })
+        res.post(post)
     }catch(err){
         res.json(err)
     }
