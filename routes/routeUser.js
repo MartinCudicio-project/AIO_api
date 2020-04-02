@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcryptjs');
 
 const router = express.Router();
 const User = require('../models/modelUser');
@@ -41,7 +42,24 @@ router.get('/:tokenId',async(req,res)=>{
     }
 });
 
-
+// update the password of an user 
+router.post('/update/password',async (req,res)=>{
+    try {
+        const { email, password, new_password } = req.body
+        const userTemp = await User.findByCredentials(email, password)
+        // console.log("the user",userTemp)
+        const pwd  = await bcrypt.hash(new_password,8) 
+        const post = await User.findOneAndUpdate({folder : userTemp.folder},
+            {$set : { 
+                    password : pwd
+                }
+            });
+        res.send("password has been modified");
+    } 
+    catch (error) {
+        return res.status(401).send({error: 'Login failed! Check authentication credentials'})
+    }
+})
 
 // -------------------------------------------------------
 

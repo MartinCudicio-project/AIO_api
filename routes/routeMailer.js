@@ -85,6 +85,21 @@ router.post('/send/createContract', async (req, res) => {
   }
 });
 
+router.post('/send/updatePassword', async (req, res) => {
+  try {
+      const intent = {
+          subject: "AIO - modification de mot de passe",
+          text: `Bonjour ${req.body.first_name},\n\nje vous informe que vous venez de changer votre mot de passe !`
+      };
+      const envoi = emailSend(req.body.email,intent);
+      res.json(envoi);
+  } catch (err) {
+      res.json({
+          err
+      });
+  }
+});
+
 // take in parameter user, intent (subject + text)
 function emailSend(email,intent){
     var retour = false;
