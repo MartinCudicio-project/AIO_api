@@ -62,10 +62,6 @@ const PostSchema = mongoose.Schema({
         //servira dans une autre collection comme clé primaire pour recuperer les dossiers etc..
         type: String
     },
-    photo :{
-        type: String,
-        required: false
-    },
     phone :{
         type: String,
         required: false
@@ -77,13 +73,6 @@ const PostSchema = mongoose.Schema({
         }
     }],
     sinisters:[SinisterSchema]
-    /*user_validated:{
-        type: Boolean,
-        required: true
-    }*/
-    // le user validated fait tout bug parceque 
-    // il a pas ete rajoute dans toutes les fonctions qui creent des users / se log
-    
 });
 
 PostSchema.pre('save',async function(next){
