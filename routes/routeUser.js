@@ -172,7 +172,6 @@ router.post('/contract/updatesinister',async(req,res)=>{
 
 router.post('/unvalidateUser',async(req,res)=>{
     try{
-        console.log(req.body)
         const post = await User.findOneAndUpdate({
             folder: req.body.folder
         },
