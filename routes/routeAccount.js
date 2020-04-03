@@ -76,13 +76,11 @@ router.post('/contract/create',async (req,res)=>{
                 purchasePrice : req.body.purchasePrice,
                 month_price : req.body.month_price,
                 listWarranted :{
-                    // panne : req.body.panne,
                     casse : req.body.casse,
-                    vol : req.body.casse,
+                    vol : req.body.vol,
                     oxydation : req.body.oxydation
                 },
                 historyWarranted : [{
-                    // panne : req.body.panne,
                     casse : req.body.casse,
                     vol : req.body.casse,
                     oxydation : req.body.oxydation,
