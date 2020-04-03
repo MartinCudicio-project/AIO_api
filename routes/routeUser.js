@@ -342,7 +342,8 @@ router.post('/contract/sinister/informations',async (req,res)=>{
                     contract_id: req.body.contract_id,
                     sinisterDate : req.body.sinisterDate,
                     sinisterTime: req.body.sinisterTime,
-                    sinisterCircumstances: req.body.sinisterCircumstances
+                    sinisterCircumstances: req.body.sinisterCircumstances,
+                    sinisterType: req.body.sinisterType
                 }
             }
         });
@@ -352,13 +353,12 @@ router.post('/contract/sinister/informations',async (req,res)=>{
                 }
             },
             {
-                multi: true,
                 arrayFilters:[ {
                     "elem.contract_id": req.body.contract_id
                 }]
             });
-        res.json(updatedPost);
-        res.json(updatedPost2);
+        res.json(updatedPost)
+        res.json(updatedPost2); 
     }catch(err){
         res.json(err);
     }
