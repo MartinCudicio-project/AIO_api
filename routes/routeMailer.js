@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 
+const appBaseUrl = "http://localhost:8080"
+
 require('dotenv').config();
 
 router.post('/send/validationLink', async (req, res) => {
@@ -90,6 +92,22 @@ router.post('/send/updatePassword', async (req, res) => {
       const intent = {
           subject: "AIO - modification de mot de passe",
           text: `Bonjour ${req.body.first_name},\n\nje vous informe que vous venez de changer votre mot de passe !`
+      };
+      const envoi = emailSend(req.body.email,intent);
+      res.json(envoi);
+  } catch (err) {
+      res.json({
+          err
+      });
+  }
+});
+
+router.post('/send/resetLink', async (req, res) => {
+  try {
+      const intent = {
+          subject: "Réinitialisation du mot de passe",
+          text: `Bonjour\n\nVoici votre mot de passe temporaire valable pendant 5 minutes : ${req.body.tempPassword}
+      \n\nCliquez sur ce lien pour réinitialiser votre mot de passe: \n\n${appBaseUrl}/users/page/resetPassword`
       };
       const envoi = emailSend(req.body.email,intent);
       res.json(envoi);
