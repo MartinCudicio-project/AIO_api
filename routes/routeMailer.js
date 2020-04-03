@@ -58,13 +58,13 @@ router.post('/send/createContract', async (req, res) => {
     var intent = {
         subject: "Création de votre contrat",
         text: `Bonjour ${name},
-        Voicu un récapitulatif de votre nouvelle subscription :
+        Voici un récapitulatif de votre nouvelle subscription :
         Appareil : ${contract.object}
         Catégorie : ${contract.category}
         Marque : ${contract.brand}
         Model : ${contract.model}
         Numéro de série : ${contract.serialNumber}
-        Prix d'achat : ${contract.purchasedPrice}
+        Prix d'achat : ${contract.purchasePrice}
         Prix mensuel : ${contract.month_price}\n`
     };
     if(contract.casse===true){
