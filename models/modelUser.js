@@ -56,6 +56,19 @@ const PostSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    tempPassword :{
+        value : {
+            type:String,
+            require : true,
+            default : null
+        },
+        timeValidity : {
+            type: Date,
+            require : true,
+            default : null
+        }
+        
+    },
     folder :{
         //le numero de son dossier d'assurance
         //on utilise la bibli uuid pour generer un numero de dossier unique

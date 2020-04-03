@@ -61,6 +61,58 @@ router.post('/update/password',async (req,res)=>{
     }
 })
 
+router.post('/update/tempPassword',async (req,res)=>{
+    try {
+        console.log("update",req.body)
+        const dt = new Date()
+        dt.setMinutes(dt.getMinutes()+5)
+        const user = await User.findOneAndUpdate({email : req.body.email},
+            {$set : { 
+                    tempPassword : 
+                    {
+                        value : req.body.tempPassword,
+                        timeValidity : dt.setMinutes(dt.getMinutes()+1)
+                    }
+                }
+            });
+        res.send("password has been modified");
+    } 
+    catch (error) {
+        return res.status(401).send({error: 'Login failed! Check authentication credentials'})
+    }
+})
+
+router.post('/update/resetPassword',async (req,res)=>{
+    try {
+        const {tempPassword, new_password } = req.body
+        console.log(req.body)
+        // console.log("the user",userTemp)
+        const date = new Date()
+        console.log(date)
+        console.log(tempPassword)
+        const pwd  = await bcrypt.hash(new_password,8) 
+        const post = await User.findOneAndUpdate(
+            {
+                "tempPassword.value": tempPassword,
+                "tempPassword.timeValidity" : { "$gt" : date}
+                // timeValidity : { "$lt" : new Date()}
+            },
+            {$set : { 
+                    password : pwd
+                }
+            });
+        if(post){
+            res.send("password has been modified")
+        }
+        else
+            return res.status(401).send({error: 'Login failed! Check authentication credentials'})
+    } 
+    catch (error) {
+        return res.status(401).send({error: 'Login failed! Check authentication credentials'})
+    }
+})
+
+
 // -------------------------------------------------------
 
 //get back if is a user is unique with the email
@@ -86,7 +138,7 @@ router.get('/emailValidation/:folder',async(req,res)=>{
                 emailValidation : true
             }
         })
-        res.post(post)
+        // res.post(post)
         res.redirect('http://localhost:8080/')
     }catch(err){
         res.json(err)
