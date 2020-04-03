@@ -21,16 +21,16 @@ const SinisterSchema = mongoose.Schema({
     },
     sinisterCircumstances: {
         type : String,
-        required : true
+        required : false
     },
     sinisterStep: {
         type : Number,
-        required : true,
+        required : false,
         default : 0
     },
     sinisterType: {
         type : String,
-        required : true,
+        required : false,
     }
 
 })

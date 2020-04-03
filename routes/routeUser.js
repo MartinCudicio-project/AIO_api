@@ -31,23 +31,22 @@ router.get('/all',async(req,res)=>{
 });
 // -----------------MODIFY AN ACCOUNT---------------------
 //return an account with its token
-router.get('/:tokenId',async(req,res)=>{
-    try{
-        const posts = await User.findOne(
-            {token: req.params.tokenID }
-        );
-        res.json(posts);
-    }catch(err){
-        res.json({message:err});
-    }
-});
+// router.get('/:tokenId',async(req,res)=>{
+//     try{
+//         const posts = await User.findOne(
+//             {token: req.params.tokenID }
+//         );
+//         res.json(posts);
+//     }catch(err){
+//         res.json({message:err});
+//     }
+// });
 
 // update the password of an user 
 router.post('/update/password',async (req,res)=>{
     try {
         const { email, password, new_password } = req.body
         const userTemp = await User.findByCredentials(email, password)
-        // console.log("the user",userTemp)
         const pwd  = await bcrypt.hash(new_password,8) 
         const post = await User.findOneAndUpdate({folder : userTemp.folder},
             {$set : { 
@@ -63,7 +62,6 @@ router.post('/update/password',async (req,res)=>{
 
 router.post('/update/tempPassword',async (req,res)=>{
     try {
-        console.log("update",req.body)
         const dt = new Date()
         dt.setMinutes(dt.getMinutes()+5)
         const user = await User.findOneAndUpdate({email : req.body.email},
@@ -85,11 +83,7 @@ router.post('/update/tempPassword',async (req,res)=>{
 router.post('/update/resetPassword',async (req,res)=>{
     try {
         const {tempPassword, new_password } = req.body
-        console.log(req.body)
-        // console.log("the user",userTemp)
         const date = new Date()
-        console.log(date)
-        console.log(tempPassword)
         const pwd  = await bcrypt.hash(new_password,8) 
         const post = await User.findOneAndUpdate(
             {
@@ -286,25 +280,24 @@ router.get('/me', auth, async(req, res) => {
 
 //section 10 
 //lien - https://medium.com/swlh/jwt-authentication-authorization-in-nodejs-express-mongodb-rest-apis-2019-ad14ec818122
-router.post('/me/logout', auth, async (req, res) => {
+router.get('/me/logout', auth, async (req, res) => {
     // Log user out of the application
     try {
-        req.user.tokens = req.user.tokens.filter((token) => {
+        req.user.tokens = req.user.tokens.filter(token => {
             return token.token != req.token
         })
         await req.user.save()
-        res.send()
+        res.status(200).send("ok")
     } catch (error) {
         res.status(500).send(error)
     }
 });
 
-router.post('/me/logoutall', auth, async(req, res) => {
+router.get('/me/logoutall', auth, async(req, res) => {
     // Log user out of all devices
     try {
         req.user.tokens.splice(0, req.user.tokens.length)
         await req.user.save()
-        res.send()
     } catch (error) {
         res.status(500).send(error)
     }
