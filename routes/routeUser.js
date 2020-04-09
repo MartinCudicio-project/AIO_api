@@ -266,6 +266,7 @@ router.post('/login', async(req, res) => {
         res.send({ userTemp, token });
     } 
     catch (error) {
+        res.send('No users with these credentials')
         res.status(404).send(error);
     }
 });
