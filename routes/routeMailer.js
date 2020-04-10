@@ -118,6 +118,26 @@ router.post('/send/resetLink', async (req, res) => {
   }
 });
 
+router.post('/send/sinister', async (req, res) => {
+  try{
+    const intent = {
+        subject: "Déclaration d'un sinistre",
+        text: `Bonjour\n\nVoici Les informations du sinistre déclaré sur l'objet : ${req.body.sinister.object}\n\n
+        Date du sinistre : ${req.body.sinister.sinisterDate}
+        Heure du sinistre : ${req.body.sinister.sinisterTime}
+        Circonstances du sinistre : ${req.body.sinister.sinisterCircumstances}
+        Type de sinistre : ${req.body.sinister.sinisterType}`
+    };
+    const envoi = emailSend(req.body.email,intent);
+    res.json(envoi);
+  }
+  catch (err) {
+    res.json({
+        err
+    });
+  }
+});
+
 // take in parameter user, intent (subject + text)
 function emailSend(email,intent){
     var retour = false;
