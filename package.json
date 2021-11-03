@@ -24,7 +24,7 @@
     "multer-gridfs-storage": "^4.0.2",
     "nodemailer": "^6.4.2",
     "uuid": "^3.3.3",
-    "validator": "^12.1.0",
+    "validator": "^13.7.0",
     "vue-multiselect": "^2.1.6",
     "vue-select": "^3.4.0"
   },
